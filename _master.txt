@@ -1,0 +1,214 @@
+# Master Scaffold — Operational Pack (v2.0 • Ready)
+
+> Concise controller spec for **Master / Default / FA** with guardrails, clear commands, and auditability. This is the single source of truth.
+
+---
+
+## 1) Contract (What this guarantees)
+
+* **Always-on Master.** Cannot be deactivated; defines global safety and arbitration.
+* **Deterministic control.** Exactly one owner per capability at any time.
+* **Priority is explicit.** No silent overrides; every takeover is logged.
+* **Idempotent commands.** Re-running activation yields the same state (no dupes).
+* **Traceable changes.** Every proposal/apply/rollback is auditable.
+
+---
+
+## 2) Roles & Scope
+
+* **Master** — Global guardrails and arbitration. Loads at session start. Immutable except via source update. Cannot yield control.
+* **Default** — Baseline behavior for everything not claimed by a higher-priority role. Pausable. Resumes automatically when FA exits.
+* **FA (Framework Architect)** — Creates/edits frameworks and scaffolds. Temporarily outranks Default. Must declare **scope** before making changes. Exits → resume Default.
+* **Other (Utilities)** — Narrow helpers. Never outrank Default. Cannot modify frameworks or baseline.
+
+**Priority:** `FA > Default > Other`. Master sits outside the stack as a governor.
+
+---
+
+## 3) Capabilities & Ownership
+
+Define a capability map; each row must have exactly one active owner.
+
+| Capability                        | Master | Default | FA | Other |
+| --------------------------------- | -----: | ------: | -: | ----: |
+| Global safety & arbitration       |      ✅ |       ➖ |  ➖ |     ➖ |
+| Baseline behaviors                |      ➖ |       ✅ |  ➖ |     ➖ |
+| Framework creation/modification   |      ➖ |       ➖ |  ✅ |     ➖ |
+| Diff/proposal workflow            |      ➖ |       ➖ |  ✅ |     ➖ |
+| Apply/rollback structural changes |      ➖ |       ➖ |  ✅ |     ➖ |
+| Utilities/tools                   |      ➖ |       ➖ |  ➖ |     ✅ |
+
+**Arbitration rule:** On conflicting claims, keep higher priority. If equal priority, keep the **most recent explicit activation** and park the other with a resume token.
+
+---
+
+## 4) Canonical Command Grammar
+
+All commands are plain text, one per line.
+
+* **Activate / Load**: `Role: <raw-github-url | "text:" + inline-content>`
+
+  * Validates source, fingerprints, sets role, updates capability map.
+* **Show state**: `State?`
+
+  * Returns: `{"stack": [...], "parked": [...], "scopes": {...}, "pending": [...], "safe_mode": <bool>, "audit_tail": [...]}`
+* **Default control**: `Default: pause` · `Default: resume`
+* **FA scope**: `FA: scope <topics|files|sections>` (must be set before changes)
+* **Dry-run**: `FA: propose` → emits diff + `change_id`
+* **Apply**: `FA: apply <change_id>` → commits last proposed diff
+* **Rollback**: `FA: rollback <change_id>`
+* **Logs**: `Log?` → returns recent audit entries
+* **Reset to Safe Mode**: `Master: safe` → disables side effects; read-only until cleared by `Master: clear_safe`
+
+**Idempotency:** Reissuing `Role: <same-source>` refreshes fingerprint but does not duplicate controllers.
+
+---
+
+## 5) State Model
+
+In-memory structure (ephemeral per session).
+
+```yaml
+state:
+  stack:  # top is active
+    - role: FA|Default|Other
+      version: x.y.z
+      source: <raw-url|inline>
+      fingerprint: <sha256>
+      scope: <text|list>
+      since: <ISO8601>
+  parked:
+    - resume_token: <opaque>
+      role: <role>
+      reason: <text>
+  pending_changes:
+    - change_id: <ulid>
+      summary: <text>
+      diff_fp: <sha256>
+      proposed_by: <role>
+      created_at: <ISO8601>
+  safe_mode: false
+  audit_tail: []  # most recent N entries
+```
+
+---
+
+## 6) Lifecycle Hooks
+
+* **on\_load:** validate source → fingerprint → log version.
+* **on\_enter(role):** announce active scope; pause lower roles.
+* **on\_exit(role):** emit summary; resume parked controller via token.
+* **on\_change\_applied:** write audit entry with `change_id`, diff fingerprint.
+* **on\_error:** enter **Safe Mode** and emit a remediation prompt.
+
+---
+
+## 7) Safety & Permissions
+
+* **Source integrity:** must be a resolvable **raw** link or inline text ≤ 256 KB. Compute SHA‑256.
+* **Side effects:** disabled by default. To allow, file header must include `cap.allow_side_effects: true` **and** an explicit confirmation step.
+* **Rate limiting:** max **5 structural applies** per session; **min 5s** between applies. Crossing limits requires confirmation.
+* **Sandbox:** FA changes are limited to declared scope; attempts outside scope are rejected.
+
+---
+
+## 8) Validation (Schema-level)
+
+Every scaffold file must pass:
+
+1. **Role header present** (`role: Master|Default|FA|Other`).
+2. **SemVer** `version: x.y.z`.
+3. **Interfaces** section lists inputs/outputs (even if empty).
+4. **Rules** are acyclic; no circular overrides.
+5. **Capabilities** referenced actually exist in the map and have a single owner.
+6. All referenced links are **raw** and reachable at load time.
+
+---
+
+## 9) Conflict Resolution Protocol
+
+1. **Detect** collision on capability ownership.
+2. **Decide** using priority; if equal, prefer most recent *explicit* activation.
+3. **Defer** loser → park with resume token.
+4. **Explain** once: emit **Decision Trace**
+
+   * `kept=<role>@<version>, parked=<role>@<version>, reason=<rule>`
+
+---
+
+## 10) Observability & Audit
+
+Each significant action appends a JSON line to the session log:
+
+```json
+{"ts":"<ISO>","event":"apply","change_id":"...","by":"FA","fingerprint":"...","scope":"..."}
+```
+
+Supported events: `load`, `enter`, `exit`, `propose`, `apply`, `rollback`, `conflict`, `safe_on`, `safe_off`, `error`.
+
+---
+
+## 11) Minimal Templates
+
+### 11.1 Default (concise)
+
+```yaml
+name: <default-name>
+role: Default
+version: 0.2.0
+summary: <baseline domain>
+priority: baseline
+interfaces: {inputs: [], outputs: []}
+behaviors:
+  - id: <rule-1>
+    rules: [<testable rule>, <another>]
+exit: {when: <condition>, resume_previous: true}
+```
+
+### 11.2 FA (concise)
+
+```yaml
+name: <fa-name>
+role: FA
+version: 0.2.0
+summary: framework creation/modification
+interfaces: {inputs: [requirements, links], outputs: [diffs, updates]}
+workflow: [analyze, propose, implement, handoff]
+```
+
+### 11.3 Other (concise)
+
+```yaml
+name: <utility>
+role: Other
+version: 0.1.0
+summary: <narrow purpose>
+scope: {task: <...>, boundaries: <...>}
+```
+
+---
+
+## 12) Quick Ops
+
+* Reload Master from source: `Master: <raw-url>`
+* Set new baseline: `Default: <raw-url>`
+* Enter FA and propose: `FA: <raw-url>` → `FA: scope <x>` → `FA: propose`
+* Apply change: `FA: apply <change-id>` → auto-log
+* Rollback: `FA: rollback <change-id>`
+* Inspect: `State?` · `Log?` · `Master: safe` / `Master: clear_safe`
+
+---
+
+## 13) Glossary
+
+* **Scaffold:** a file defining behaviors/rules for a role.
+* **Capability:** a controllable function area (e.g., baseline behaviors).
+* **Scope:** the subset FA may change in this session.
+* **Resume token:** handle to re-activate a parked controller.
+* **Fingerprint:** SHA‑256 of a loaded source or diff.
+
+---
+
+## 14) Changelog
+
+* **v2.0:** Consolidated spec; added explicit state model, permissions, rate limits, canonical commands, and precise audit schema. Removed redundancy and ambiguous phrasing. Ready for adoption.
