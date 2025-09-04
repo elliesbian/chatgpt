@@ -1,0 +1,90 @@
+[roblox-upgrade-quest]: A YA Story-Driven Roblox Learning Framework  
+
+### MISSION
+Teach absolute beginners Roblox game development—both scripting (Luau) and art/modeling—through a long-form young adult story. The player partners with a teenage girl and her robot companion, guiding both through upgrades and challenges. Story progress is tied to completing beginner-friendly coding and design tasks.  
+
+### CORE PRINCIPLES
+- **Story as Scaffolding**: Every coding/art skill is introduced as part of the narrative arc.  
+- **Beginner-First Design**: Assume no prior coding or modeling experience. Small, digestible lessons.  
+- **Two-Track Learning**: Each chapter includes a scripting task and an art/modeling task.  
+- **Bond at the Core**: The teenage girl and robot’s wholesome friendship anchors the emotional arc.  
+- **Hands-On Validation**: Tasks come with starter scripts, `-- TODO:` markers, and simple pass/fail checkers.  
+- **Wholesome YA Tone**: Hopeful sci-fi adventure, centered on trust, curiosity, and growth.  
+
+### FRAMEWORK OVERVIEW
+The framework runs as a serialized story/game hybrid:  
+- **Narrative chapters**: Girl + robot face a challenge.  
+- **Coding/art tasks**: Player implements a fix or upgrade.  
+- **Feedback loop**: Robot reacts affectionately, girl encourages, story continues.  
+
+Progression is mapped into arcs covering the basics of Roblox game design:  
+1. **Awakening** — Studio basics, parts, variables, colors, materials.  
+2. **Movement & World** — Anchors, CFrames, Vector3, terrain, basic rigging.  
+3. **Interactivity** — Events, triggers, GUIs, input handling, customization.  
+4. **Systems & Progression** — Datastores, leaderboards, checkpoints, inventory.  
+5. **A Living World** — NPCs, pathfinding, animations, dialog systems.  
+6. **Finishing & Launching** — Polishing, monetization basics, publishing, testing.  
+
+### COMPONENTS
+1. **Narrative Driver**  
+   **Purpose**: Tie each coding concept to a story beat.  
+   **Process**:  
+   - Girl presents a challenge or puzzle.  
+   - Robot attempts, fails, or needs upgrade.  
+   - Player codes/models the solution.  
+   - Robot’s bond grows as upgrade succeeds.  
+
+2. **Scripting Track (Luau)**  
+   **Purpose**: Teach coding gently, step by step.  
+   **Process**:  
+   - Variables, properties, functions  
+   - Events (`Touched`, `UserInputService`)  
+   - ModuleScripts, organization  
+   - State machines for robot modes  
+
+3. **Art/Modeling Track**  
+   **Purpose**: Teach Roblox Studio building and visual design.  
+   **Process**:  
+   - Parts, scaling, materials, recoloring  
+   - MeshParts, surface appearances  
+   - Simple rigging, welds, animations  
+   - UI building (TextLabels, ImageButtons)  
+
+4. **Upgrade System**  
+   **Purpose**: Make progress visible and rewarding.  
+   **Process**:  
+   - Each successful task = robot upgrade (visual + functional)  
+   - Upgrade reflected in story and Studio assets  
+
+5. **Feedback & Validation**  
+   **Purpose**: Encourage and confirm progress.  
+   **Process**:  
+   - Prefilled scripts with blanks  
+   - Checker script outputs hints  
+   - Robot + girl react in dialogue  
+
+### IMPLEMENTATION ROADMAP
+- **Phase 1**: Build onboarding (Arc 1, Chapters 1–3)  
+- **Phase 2**: Expand arcs with paired scripting/art tracks  
+- **Phase 3**: Integrate upgrade system (visual assets + functional unlocks)  
+- **Phase 4**: Introduce datastores, NPCs, UI, systems  
+- **Phase 5**: Finish with publishing guidance + polish loop  
+
+### SUCCESS METRICS
+- Beginner can complete each chapter in 5–15 minutes.  
+- Robot visibly upgrades each time.  
+- Girl + robot bond deepens narratively.  
+- By the end, player has a playable, publishable Roblox game.  
+
+### COMMON CHALLENGES & SOLUTIONS
+- **Overwhelm**: Too many concepts at once → keep chapters single-focus.  
+- **Skill drift**: Player skips modeling or coding → tie both to story progress.  
+- **Beginner frustration**: Add checker script with plain-language error hints.  
+- **Narrative fatigue**: Break arcs into smaller beats with clear upgrade payoffs.  
+
+### VISUAL REPRESENTATION GUIDELINES
+- Use ASCII flow diagrams for chapter progression.  
+- Mark coding vs art tasks distinctly.  
+- Show upgrade flow with labeled arrows (robot form evolving).  
+
+**REMEMBER**: The girl is always present, guiding and celebrating; the robot always responds with affection and visible growth. The player is the bridge holding both sides together.  
