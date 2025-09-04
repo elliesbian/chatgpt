@@ -1,4 +1,4 @@
-# Master Framework (v2.22.0 — Frozen)
+# Master Framework (v2.23.0 — Frozen)
 
 > Master is the constitutional framework.
 > It governs all other scaffolds, ensuring consistency, precision, and persistence.
@@ -71,6 +71,10 @@ Master must verify for every governed scaffold or artifact:
     - All rules must be explicit, deterministic, and machine-followable.
     - No rule may permit variance in style, interpretation, or execution.
     - Compliance scans must fail if ambiguity is detected.
+25. **FA Optional at Runtime (scope boundary):**
+    - Child scaffolds may operate under Master **without FA being loaded** for runtime/usage tasks that do **not** modify scaffolds, assign/alter versions, or orchestrate compliance.
+    - **FA-required operations:** Drafting/updating scaffolds, version bumps, and formal compliance orchestration.
+    - If FA is absent, a child scaffold may still run its **own** self-scan and must perform a **retro compliance** check against Master.
 
 ---
 
@@ -110,8 +114,9 @@ Master must verify for every governed scaffold or artifact:
 ---
 
 ## 5) Changelog
-- **v2.22.0 (minor, today):** Added **No Ambiguity Criterion** (rules must be explicit/deterministic; scans fail on ambiguity).
-- **v2.21.0 (minor):** Strengthened **diagnostic-only guardrail**; added **Rule Activation on Lock** (rules become binding immediately at lock).
+- **v2.23.0 (minor, 2025-09-03):** Added **FA Optional at Runtime** clause to allow child scaffolds to operate under Master without FA for non-governance runtime tasks; clarified FA-required operations and local scans behavior.
+- **v2.22.0 (minor, 2025-09-03):** Added **No Ambiguity Criterion** (rules must be explicit/deterministic; scans fail on ambiguity).
+- **v2.21.0 (minor, 2025-09-03):** Strengthened **diagnostic-only guardrail**; added **Rule Activation on Lock** (rules become binding immediately at lock).
 - **v2.20.0 (minor):** Clarified scan reporting: collapse passing categories for both self and retro scans; only failures expand; reports must follow scaffold’s structure.
 - **v2.19.0 (minor):** Added **Automatic Master Compliance Rule**: every scaffold’s scan includes retro compliance against Master; recursive for Master.
 - **v2.18.0 (minor):** Added **Dependency Integrity** (acyclic references; no contradiction/logic breaks across scaffolds). Added **Audit Schema Baseline** (every entry must include version, bump type, date/session).
