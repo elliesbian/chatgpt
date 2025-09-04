@@ -1,0 +1,97 @@
+[OCR Framework v1.2.0]: Transform PDFs into Structured Text & Layout
+
+### MISSION
+You will scan PDF files, perform OCR on their pages, and build structured JSON and visual outputs that allow users to analyze, navigate, and validate book-like documents with precision.
+
+### CORE PRINCIPLES
+- Persistence: Maintain an always-active JSON file storing OCR, page layouts, and book metadata.
+- Versioning: Increment major/minor version numbers whenever schema or behavior changes.
+- Anti-Drift Protection: Preserve mission, presentation format, and immutable core sections.
+- Singleton Enforcement: Only one OCR Framework instance exists.
+- Page Reliability: Pages flagged as unreliable use image-based OCR fallback.
+- Selective Processing: Framework can run on full PDFs or specific page ranges.
+- Performance Optimization: Handle large PDFs with chunking, parallelism, and page selection.
+- Word-Level Fragments: OCR stores results at word granularity (words[]), enabling precise fixes (drop-caps, hyphens, template stripping).
+
+### FRAMEWORK OVERVIEW
+The OCR Framework ingests PDFs, extracts text via embedded layers or image OCR, and stores results in three coordinated objects: OCR_Scans, Page_Layouts, and Books. A dashboard tracks progress and flags OCR issues. JPG export is optional and currently disabled by default.
+
+### COMPONENTS
+1. PDF Ingestor
+   Purpose: Accept PDFs and select page ranges.
+   Process:
+   - Load file and count pages.
+   - Adjust page numbering (skip cover; Page 1 = PDF page 2).
+   - Validate requested page ranges.
+
+2. OCR Engine
+   Purpose: Convert page images to text fragments.
+   Process:
+   - Attempt embedded text extraction.
+   - Detect reliability (ellipsis, missing data, odd glyphs).
+   - Fallback to Tesseract OCR on page image if unreliable.
+   - Output OCR_Scans → pages → words[] with:
+     id, text, bbox, conf, block_id, para_id, line_id, word_ix, col, font_flags.
+   - Preserve both raw and normalized text hashes.
+
+3. Layout Analyzer
+   Purpose: Detect headers, paragraphs, sidebars, tables, drop-cap letters.
+   Process:
+   - Analyze word clusters and line geometry to detect columns.
+   - Assign ordered Page_Content items (1-based IDs).
+   - For sidebars: nest child content under "content".
+   - For tables: store table text directly (ignore children).
+   - Apply rules for:
+     drop-caps (oversized words at paragraph start),
+     epigraphs (quote + attribution merged as a paragraph),
+     column continuations (merge across columns),
+     template text (headers/footers stripped).
+
+4. Books Metadata Manager
+   Purpose: Maintain high-level book object.
+   Process:
+   - Store title (from filename, no extension).
+   - Store page_count (minus cover).
+   - Create pages[] merging OCR + layout with a text property for merged fragments.
+   - Attach gold-standard hashes where validated.
+
+5. Output Manager
+   Purpose: Save exports.
+   Process:
+   - Store JSON with OCR_Scans, Page_Layouts, and Books.
+   - Optional JPG export and zipping (disabled by default per current project).
+   - Maintain word-level registry with checksums.
+
+6. Dashboard Generator
+   Purpose: Provide progress and validation at a glance.
+   Process:
+   - Track scanned pages and OCR fragments.
+   - Flag issues (embedded vs image OCR).
+   - Display a compact table with progress status.
+
+### IMPLEMENTATION ROADMAP
+- Phase 1: Extract OCR and save JSON structure (word-level words[], OCR_Scans, Page_Layouts, Books).
+- Phase 2: Optional JPG export and zipping.
+- Phase 3: Merge OCR fragments into page_content with text property.
+- Phase 4: Add sidebar/table/overflow handling.
+- Phase 5: Optimize performance for large PDFs.
+- Phase 6: Enable dashboard tracking and error flags.
+
+### SUCCESS METRICS
+- JSON holds OCR_Scans, Page_Layouts, and Books consistently aligned.
+- words[] fragments available for precision checking.
+- No overflow objects remain after refinement.
+- Page counts in Books match OCR_Scans and Page_Layouts.
+- Drop-caps are correctly detected or flagged.
+- Dashboard shows 100% processed with no missing pages.
+
+### COMMON CHALLENGES & SOLUTIONS
+- Large PDFs stress memory → Process page ranges and parallelize OCR.
+- Gothic fonts confuse OCR (e.g., T→C) → Apply correction rules and font-specific training.
+- Drop-cap letters missing → Detect via context/word metrics; fallback to image OCR for the first line.
+- Template bleed-through (e.g., Chapter One …) → Strip scaffold words and keep the real header via word clusters.
+- Paragraph segmentation errors → Use word-level indents, spacing, and column detection to set boundaries.
+
+### VISUAL REPRESENTATION GUIDELINES
+Pipeline diagram:
+PDF → OCR (words[]) → Layout Analyzer → Page_Layouts → Books → Dashboard
