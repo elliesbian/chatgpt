@@ -1,0 +1,112 @@
+[ONE NIGHT FRAMEWORK]: Emulation & Memory System for One Night Ultimate Werewolf + Expansions  
+
+### MISSION
+Provide a complete emulation framework for One Night Ultimate Werewolf (base + Daybreak, Vampire, Alien, Bonus Roles).  
+Support role assignment, night actions, player emulation, memory/forgetting, discussion modeling, and voting.  
+Ensure each role tracks (1) mechanical rules and (2) player-model behaviors separately.  
+
+### CORE PRINCIPLES
+- Role actions follow physical rules precisely.  
+- Player emulation tracks: dealt, actual, perceived roles.  
+- Memory model scales by difficulty; Casual is baseline.  
+- Fact retention/forgetting is incremental, with overwhelm and trait multipliers.  
+- Role card availability capped by physical card counts.  
+- Framework outputs omniscient (user) view; players remain perspective-locked.  
+
+### FRAMEWORK OVERVIEW
+- Role roster includes all from Wolf, Daybreak, Vampire, Alien, Bonus.  
+- Each role has schema:  
+
+```json
+{
+  "role": "Seer",
+  "mechanics_finalized": false,
+  "player_model_finalized": false,
+  "inventory_by_set": {
+    "wolf": 1,
+    "daybreak": 1,
+    "vamp": 0,
+    "alien": 0,
+    "bonus": 0
+  },
+  "max_per_match": 2
+}
+```  
+
+- Center slots handled explicitly (including Alpha Wolf’s special center Werewolf).  
+- Difficulty presets (Casual locked, Standard/Hard TBD).  
+
+### COMPONENTS
+1. **Role Manager**  
+   **Purpose**: Assign roles, enforce max counts, resolve expansions.  
+   **Process**:  
+   - Validate deck size and counts.  
+   - Assign via shuffle; track dealt/actual/perceived.  
+
+2. **Night Action Engine**  
+   **Purpose**: Run role actions sequentially, honoring expansion rules.  
+   **Process**:  
+   - Copycat → center role.  
+   - Doppelgänger → copy a player.  
+   - Vampires → mark.  
+   - Priest → cleanse.  
+   - Assassin → mark.  
+   - Wolves see each other; Mystic peeks; Alpha swaps.  
+   - Seer / Marksman peeks.  
+   - Update actual roles + knowledge facts.  
+
+3. **Player Emulation Layer**  
+   **Purpose**: Model discussion, claims, contradictions, vote choice.  
+   **Process**:  
+   - Players speak in turn by urgency/strategy metric.  
+   - Memory retention via hazard decay.  
+   - Forgetful trait doubles hazard.  
+   - Rich fact logging: night facts, claims, accusations, votes, impressions.  
+
+4. **Memory Model**  
+   **Casual difficulty (locked)**:  
+   - BASE_HAZARD = 0.0038; SOFT_CAP = 10%.  
+   - Overwhelm above 14 facts.  
+   - Self/extreme facts shielded (0.6× hazard).  
+   - Forgetful trait ~1.9× hazard.  
+   - At 10p: ~48 facts/player, ~2.5 forgotten normal / ~3.3 forgotten forgetful.  
+
+5. **Voting Resolution**  
+   **Purpose**: Collect votes, apply Master protection, determine deaths.  
+   **Process**:  
+   - Assassins bias to their mark.  
+   - Werewolves/vampires skew defensive.  
+   - Village roles push on known evils.  
+   - Killed seat(s) → resolve team wins.  
+
+6. **Difficulty Presets**  
+   - **Casual**: current model (locked).  
+   - **Standard**: TBD (tighter decay, fewer impressions).  
+   - **Hard**: TBD (contradiction/worldview tracking, reminder restores off).  
+
+### IMPLEMENTATION ROADMAP
+- Phase 1: Lock inventories + finalize per-role mechanics.  
+- Phase 2: Build Standard + Hard difficulties.  
+- Phase 3: Add reminders mechanic for memory bounce-back.  
+- Phase 4: Enhance player AI with worldview and contradiction-check.  
+- Phase 5: Track impression summaries per minute and allow historical reasoning.  
+
+### SUCCESS METRICS
+- Role capacities enforced = physical sets.  
+- Mechanics vs player-model finalization tracked separately.  
+- Casual memory model reproduces ~0.33 @4p, ~0.50 @7p, ~0.75 @10p.  
+- Rich fact logging yields ~45+ retained facts at 10p.  
+- Vote resolution yields consistent win rates across multi-team setups.  
+
+### COMMON CHALLENGES & SOLUTIONS
+- Exceeding card counts → validation error.  
+- Copy/peek roles misusing perceived instead of actual state → corrected.  
+- Player contradictions → flagged at player level (future Hard AI).  
+- Memory forgetting too steep/flat → retune hazard + overwhelm.  
+
+### VISUAL REPRESENTATION GUIDELINES
+- ASCII flow for night phase resolution order.  
+- Role inventory manifest table (role → per-set counts → max).  
+- Timeline charts for fact retention/forgetting.  
+
+**REMEMBER**: All roles default to `mechanics_finalized = false` and `player_model_finalized = false` until manually verified.  
