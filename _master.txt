@@ -1,4 +1,4 @@
-# Master Framework (v2.17.0 — Frozen)
+# Master Framework (v2.18.0 — Frozen)
 
 > Master is the constitutional framework.
 > It governs all other scaffolds, ensuring consistency, precision, and persistence.
@@ -34,7 +34,7 @@ Master must verify for every governed scaffold or artifact:
 9. **Absence of logical inconsistencies within or across rules.**
 10. Proper sanitation and markdown boxing when displayed in full.
 11. **Compliance scan against Success Criteria must be performed and logged before freeze. Freeze halts if criteria are not run.**
-12. Success criteria reporting format (✅ categories that fully pass, ❌ with bulleted failing criteria).
+12. Success criteria reporting format (✅ categories that fully pass, ❌ with bulleted failing criteria) and must follow the scaffold’s own organization (no invented categories).
 13. Formal versioning rules are followed:
     - Version numbers are semantic (major.minor.patch).
     - Version numbers may only be assigned or altered under FA’s authority.
@@ -52,6 +52,15 @@ Master must verify for every governed scaffold or artifact:
 17. Audit compression discipline (concise change lists, full scaffolds retrievable).
 18. **Full scaffold display clause:** When displaying a scaffold in full, the entire canonical scaffold must be output verbatim, including the complete changelog from inception. No parts may be withheld, collapsed, or labeled as archival.
 19. **All rules are hard-enforced unless explicitly marked as optional.**
+20. **Dependency Integrity (global):**
+    - Cross-scaffold references must be **acyclic** (no circular dependencies).
+    - Cross-scaffold references must not introduce contradictions or logical inconsistencies.
+21. **Audit Schema Baseline (global):**
+    - Every changelog entry must include at minimum:
+      - **Version** (semantic),
+      - **Bump type** (major/minor/patch),
+      - **Date or session marker** of the change.
+    - FA may add richer audit fields; these baseline fields are mandatory.
 
 ---
 
@@ -64,45 +73,46 @@ Master must verify for every governed scaffold or artifact:
 4. ✅ No contradictions internally or across governed artifacts
 5. ✅ No logical inconsistencies within or across rules
 6. ✅ Core Principles enforced: persistence/anti-drift, compactness, disciplined version control
+7. ✅ Dependency integrity enforced (acyclic, no contradiction introduced by references)
 
 **B. Validation & Enforcement**
-7. ✅ Freeze requires compliance scan (hard-enforced, halts if missing)
-8. ✅ Chunked scans/routines prevent truncation or freezing
-9. ✅ Rules precise and non-redundant
-10. ✅ Performance/impact reporting required on suggested changes
-11. ✅ Success criteria scans reported by category (passes as ✅ line; failures as ❌ with bulleted list)
+8. ✅ Freeze requires compliance scan (hard-enforced, halts if missing)
+9. ✅ Chunked scans/routines prevent truncation or freezing
+10. ✅ Rules precise and non-redundant
+11. ✅ Performance/impact reporting required on suggested changes
+12. ✅ Success criteria scans reported by the scaffold’s own structure (categories only if the scaffold defines them)
 
 **C. Display & Output Discipline**
-12. ✅ Scaffolds displayed in full are sanitized + markdown boxed
-13. ✅ Full scaffold displays complete (no redaction, incl. full changelog and all sections, no placeholders)
-14. ✅ Large outputs only when explicitly requested
-15. ✅ Update audits compact: bulleted changes; full scaffolds retrievable
-16. ✅ Session footprint minimized via canonical references, not repetition
-17. ✅ Entire canonical scaffold output verbatim, including full changelog from inception
+13. ✅ Scaffolds displayed in full are sanitized + markdown boxed
+14. ✅ Full scaffold displays complete (no redaction, incl. full changelog and all sections, no placeholders)
+15. ✅ Large outputs only when explicitly requested
+16. ✅ Update audits compact: bulleted changes; full scaffolds retrievable
+17. ✅ Session footprint minimized via canonical references, not repetition
 
-**D. Versioning**
-18. ✅ Semantic versioning enforced (major.minor.patch)
-19. ✅ FA-only versioning authority; ad-hoc invalid
-20. ✅ Major/minor/patch increments follow Master’s defined rules
+**D. Versioning & Audit**
+18. ✅ Semantic versioning enforced; FA-only versioning authority
+19. ✅ Major/minor/patch increments follow Master’s defined rules
+20. ✅ Audit Schema Baseline present in every changelog entry (version, bump type, date/session)
 
 ---
 
 ## 5) Changelog
-- **v2.17.0:** Clarified that “framework” means “scaffold” in all references. Added explicit requirement that scaffolds contain no logical inconsistencies.
-- **v2.16.0:** Clarified enforcement model: all rules are hard-enforced unless explicitly optional. Strengthened pre-freeze behavior: compliance scan must be performed and logged before freeze; freeze halts if missing. Validation outcomes must be logged with version bumps.
-- **v2.15.0:** Clarified success criteria reporting must follow scaffold’s structure (categories vs flat). No invention of categories.
-- **v2.14.0:** Clarified that full scaffold displays must output the entire canonical scaffold verbatim, including the complete changelog from inception; no archival placeholders allowed.
-- **v2.13.0:** Added rule for condensed success criteria reporting by category.
-- **v2.12.0:** Clarified that full scaffold displays must include all sections and complete changelog history with no compression or placeholders.
-- **v2.11.1:** Reorganized and condensed Success Criteria into grouped categories (Structural Integrity, Validation & Enforcement, Display & Output Discipline, Versioning).
-- **v2.11.0:** Added session footprint minimization, audit compression, chunked scans, full unredacted displays, and large-output rules.
-- **v2.10.0:** Added rule that Master cannot be altered except by explicit user instruction. Added governed artifacts and truncation protection. Added global versioning enforcement (semantic, FA authority). Added Core Principles baseline (persistence, compactness, version control).
-- **v2.9.0:** Added reporting format for success criteria scans.
-- **v2.8.0:** Added freeze compliance scan requirement.
-- **v2.7.0:** Added display sanitation & markdown boxing requirement.
-- **v2.6.0:** Added contradiction prohibition.
-- **v2.5.0:** Added singleton enforcement, persistence/anti-drift, global success metrics.
-- **v2.4.0:** Added diagnostic-only guardrail.
-- **v2.3.0:** Elevated performance-impact reporting as a global requirement for all governed scaffolds.
-- **v2.2.3:** Prior frozen baseline used earlier in this session (no additional metadata recorded).
-- **v2.0:** Consolidated spec introduced with state model, permissions, rate limits, canonical command grammar, and JSON audit schema. Ready for adoption.
+- **v2.18.0 (minor, today):** Added **Dependency Integrity** (acyclic references; no contradiction/logic breaks across scaffolds). Added **Audit Schema Baseline** (every entry must include version, bump type, date/session).
+- **v2.17.0 (minor):** Clarified that “framework” means “scaffold” in all references. Added explicit requirement that scaffolds contain no logical inconsistencies.
+- **v2.16.0 (minor):** Clarified enforcement model: all rules are hard-enforced unless explicitly optional. Strengthened pre-freeze behavior: compliance scan must be performed and logged before freeze; freeze halts if missing. Validation outcomes must be logged with version bumps.
+- **v2.15.0 (minor):** Clarified success criteria reporting must follow scaffold’s structure (categories vs flat). No invention of categories.
+- **v2.14.0 (minor):** Clarified that full scaffold displays must output the entire canonical scaffold verbatim, including the complete changelog from inception; no archival placeholders allowed.
+- **v2.13.0 (minor):** Added rule for condensed success criteria reporting by category.
+- **v2.12.0 (minor):** Clarified that full scaffold displays must include all sections and complete changelog history with no compression or placeholders.
+- **v2.11.1 (patch):** Reorganized and condensed Success Criteria into grouped categories (Structural Integrity, Validation & Enforcement, Display & Output Discipline, Versioning).
+- **v2.11.0 (minor):** Added session footprint minimization, audit compression, chunked scans, full unredacted displays, and large-output rules.
+- **v2.10.0 (minor):** Added rule that Master cannot be altered except by explicit user instruction. Added governed artifacts and truncation protection. Added global versioning enforcement (semantic, FA authority). Added Core Principles baseline (persistence, compactness, version control).
+- **v2.9.0 (minor):** Added reporting format for success criteria scans.
+- **v2.8.0 (minor):** Added freeze compliance scan requirement.
+- **v2.7.0 (minor):** Added display sanitation & markdown boxing requirement.
+- **v2.6.0 (minor):** Added contradiction prohibition.
+- **v2.5.0 (minor):** Added singleton enforcement, persistence/anti-drift, global success metrics.
+- **v2.4.0 (minor):** Added diagnostic-only guardrail.
+- **v2.3.0 (minor):** Elevated performance-impact reporting as a global requirement for all governed scaffolds.
+- **v2.2.3 (patch):** Prior frozen baseline used earlier in this session (no additional metadata recorded).
+- **v2.0 (major):** Consolidated spec introduced with state model, permissions, rate limits, canonical command grammar, and JSON audit schema. Ready for adoption.
