@@ -10,6 +10,8 @@ Ensure each role tracks (1) mechanical rules and (2) player-model behaviors sepa
 - Player emulation tracks: dealt, actual, perceived roles.  
 - Memory model scales by difficulty; Casual is baseline.  
 - Fact retention/forgetting is incremental, with overwhelm and trait multipliers.  
+- Players retain their own dealt role, actual role changes, and perceived role.  
+- Facts spoken aloud can be forgotten (soft-deletes) but may be restored by reminders.  
 - Role card availability capped by physical card counts.  
 - Framework outputs omniscient (user) view; players remain perspective-locked.  
 
@@ -62,6 +64,11 @@ Ensure each role tracks (1) mechanical rules and (2) player-model behaviors sepa
    - Memory retention via hazard decay.  
    - Forgetful trait doubles hazard.  
    - Rich fact logging: night facts, claims, accusations, votes, impressions.  
+   - **Contradiction triggers:** if two public claims directly conflict, players involved (or others) will engage immediately.  
+   - **Extreme claims memory:** players strongly remember their own bold claims unless a rare intentional forget is modeled.  
+   - **Impression summaries:** every minute, each player records who they trust/suspect; used in later reasoning.  
+   - **Reminders:** players can restate forgotten facts aloud, restoring them for others.  
+   - **Soft-delete forgetting:** spoken facts decay gradually; each new speaker turn increments forget chance slightly.  
 
 4. **Memory Model**  
    **Casual difficulty (locked)**:  
@@ -69,6 +76,7 @@ Ensure each role tracks (1) mechanical rules and (2) player-model behaviors sepa
    - Overwhelm above 14 facts.  
    - Self/extreme facts shielded (0.6× hazard).  
    - Forgetful trait ~1.9× hazard.  
+   - Forget chance grows with each new speaker turn (0.1%/fact normal, 0.2% forgetful).  
    - At 10p: ~48 facts/player, ~2.5 forgotten normal / ~3.3 forgotten forgetful.  
 
 5. **Voting Resolution**  
@@ -78,6 +86,7 @@ Ensure each role tracks (1) mechanical rules and (2) player-model behaviors sepa
    - Werewolves/vampires skew defensive.  
    - Village roles push on known evils.  
    - Killed seat(s) → resolve team wins.  
+   - **Early vote rule:** only allowed if unanimous; otherwise timer continues.  
 
 6. **Difficulty Presets**  
    - **Casual**: current model (locked).  
@@ -87,8 +96,8 @@ Ensure each role tracks (1) mechanical rules and (2) player-model behaviors sepa
 ### IMPLEMENTATION ROADMAP
 - Phase 1: Lock inventories + finalize per-role mechanics.  
 - Phase 2: Build Standard + Hard difficulties.  
-- Phase 3: Add reminders mechanic for memory bounce-back.  
-- Phase 4: Enhance player AI with worldview and contradiction-check.  
+- Phase 3: Add reminders mechanic for memory bounce-back (now formalized).  
+- Phase 4: Enhance player AI with worldview tracking and contradiction-check.  
 - Phase 5: Track impression summaries per minute and allow historical reasoning.  
 
 ### SUCCESS METRICS
@@ -97,16 +106,20 @@ Ensure each role tracks (1) mechanical rules and (2) player-model behaviors sepa
 - Casual memory model reproduces ~0.33 @4p, ~0.50 @7p, ~0.75 @10p.  
 - Rich fact logging yields ~45+ retained facts at 10p.  
 - Vote resolution yields consistent win rates across multi-team setups.  
+- Contradictions trigger immediate discussion as designed.  
+- Early vote unanimity rule enforced.  
 
 ### COMMON CHALLENGES & SOLUTIONS
 - Exceeding card counts → validation error.  
 - Copy/peek roles misusing perceived instead of actual state → corrected.  
-- Player contradictions → flagged at player level (future Hard AI).  
+- Player contradictions → flagged immediately (future Hard AI will deepen).  
 - Memory forgetting too steep/flat → retune hazard + overwhelm.  
+- Players forgetting their own claims → blocked unless difficulty forces it.  
 
 ### VISUAL REPRESENTATION GUIDELINES
 - ASCII flow for night phase resolution order.  
 - Role inventory manifest table (role → per-set counts → max).  
 - Timeline charts for fact retention/forgetting.  
+- Impression summary matrix by minute.  
 
 **REMEMBER**: All roles default to `mechanics_finalized = false` and `player_model_finalized = false` until manually verified.  
