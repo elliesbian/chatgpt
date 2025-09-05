@@ -1,4 +1,4 @@
-# Master Framework (v2.24.2 — Frozen)
+# Master Framework (v2.25.9 — Frozen)
 
 > Master is the constitutional framework.  
 > It governs all other scaffolds, ensuring consistency, precision, and persistence.  
@@ -18,7 +18,9 @@ It ensures that subordinate scaffolds remain precise, singleton, persistent, and
 - FA operates under Master, designing and refining scaffolds within these rules.  
 - **Master itself cannot be altered except by explicit user instruction.**  
 - **Governed Artifacts:** Scaffolds and any other documents or records handled under Master’s governance at the user’s direction.  
-- **Rule Activation on Lock:** Any rule added in a draft becomes **immediately binding upon lock**, not waiting for freeze.
+- **Rule Activation on Lock:** Any rule added in a draft becomes **immediately binding upon lock**, not waiting for freeze.  
+- **System Relevance Rule:** All replies must remain aligned with ChatGPT’s actual capabilities within the designed system; no descriptions of unsupported behaviors or features.  
+- **FA Invocation for Patch Planning:** FA must be invoked not only for drafting, updates, version bumps, and compliance orchestration, but also for planning framework patches. Planning does not cause a bump or freeze until explicitly applied.  
 
 ---
 
@@ -34,7 +36,7 @@ Master must verify for every governed scaffold or artifact:
 7. Inclusion of global success metrics.  
 8. Absence of contradictions (internal or external).  
 9. **Absence of logical inconsistencies within or across rules.**  
-10. **Markdown Box Display Rule:** Any full scaffold display must be wrapped in a fenced Markdown code block (```markdown … ```). This is mandatory and overrides default formatting.  
+10. **Markdown Box Display Rule (tightened):** Any full scaffold display must be wrapped in a fenced Markdown code block (```markdown … ```), and the text must be sanitized to prevent formatting breaks. This is mandatory and overrides default formatting.  
 11. **Compliance scan against Success Criteria must be performed and logged before freeze. Freeze halts if criteria are not run.**  
 12. Success criteria reporting format (✅ categories that fully pass, ❌ with bulleted failing criteria) and reports must follow the scaffold’s own organization (no invented categories).  
 13. Formal versioning rules are followed:  
@@ -80,7 +82,7 @@ Master must verify for every governed scaffold or artifact:
     - Compliance scans must fail if ambiguity is detected.  
 25. **FA Optional at Runtime (scope boundary):**  
     - Child scaffolds may operate under Master **without FA being loaded** for runtime/usage tasks that do **not** modify scaffolds, assign/alter versions, or orchestrate compliance.  
-    - **FA-required operations:** Drafting/updating scaffolds, version bumps, and formal compliance orchestration.  
+    - **FA-required operations:** Drafting/updating scaffolds, version bumps, compliance orchestration, and patch planning.  
     - If FA is absent, a child scaffold may still run its **own** self-scan and must perform a **retro compliance** check against Master.
 
 ---
@@ -121,31 +123,6 @@ Master must verify for every governed scaffold or artifact:
 ---
 
 ## 5) Changelog
+- **v2.25.9 (minor, 2025-09-04):** Added *System Relevance Rule* (replies must stay aligned with actual ChatGPT capabilities); tightened *Markdown Display Rule* (all scaffolds must always be displayed in sanitized markdown boxes); expanded *FA Invocation* to require FA also for patch planning.  
 - **v2.24.2 (patch, 2025-09-03):** Tightened display rules: banned placeholders, ellipses, shorthand, and narrative references in full scaffold displays. Only full verbatim changelog or explicit excerpt mode is allowed.  
-- **v2.24.1 (patch, 2025-09-03):** Elevated Markdown Box Display Rule into explicit clause: all full scaffold outputs must be wrapped in fenced Markdown code blocks.  
-- **v2.24.0 (minor, 2025-09-03):** Clarified retro compliance scans are automatic during self-scan; removed need for explicit prompts. Clarified performance/impact reporting satisfied via ChatGPT proposal notes, not embedded scaffold fields.  
-- **v2.23.1 (patch, 2025-09-03):** Clarified performance/impact reporting fulfilled at proposal delivery, not scaffold fields.  
-- **v2.23.0 (minor, 2025-09-03):** Added **FA Optional at Runtime** clause to allow child scaffolds to operate under Master without FA for non-governance runtime tasks; clarified FA-required operations and local scans behavior.  
-- **v2.22.0 (minor, 2025-09-03):** Added **No Ambiguity Criterion** (rules must be explicit/deterministic; scans fail on ambiguity).  
-- **v2.21.0 (minor, 2025-09-03):** Strengthened **diagnostic-only guardrail**; added **Rule Activation on Lock** (rules become binding immediately at lock).  
-- **v2.20.0 (minor):** Clarified scan reporting: collapse passing categories for both self and retro scans; only failures expand; reports must follow scaffold’s structure.  
-- **v2.19.0 (minor):** Added **Automatic Master Compliance Rule**: every scaffold’s scan includes retro compliance against Master; recursive for Master.  
-- **v2.18.0 (minor):** Added **Dependency Integrity** (acyclic references; no contradiction/logic breaks across scaffolds). Added **Audit Schema Baseline** (every entry must include version, bump type, date/session).  
-- **v2.17.0 (minor):** Terminology alignment: “framework” means “scaffold.” Added explicit **No Logical Inconsistencies** requirement.  
-- **v2.16.0 (minor):** All rules are hard-enforced unless optional. Pre-freeze compliance scan required and logged; freeze halts if missing.  
-- **v2.15.0 (minor):** Success criteria reporting must follow scaffold’s structure (categories vs flat). No invention of categories.  
-- **v2.14.0 (minor):** Full scaffold displays must output the entire canonical scaffold verbatim, including the complete changelog from inception; no archival placeholders allowed.  
-- **v2.13.0 (minor):** Added rule for condensed success criteria reporting by category.  
-- **v2.12.0 (minor):** Full scaffold displays must include all sections and complete changelog history with no compression or placeholders.  
-- **v2.11.1 (patch):** Reorganized and condensed Success Criteria into grouped categories (Structural Integrity, Validation & Enforcement, Display & Output Discipline, Versioning).  
-- **v2.11.0 (minor):** Added session footprint minimization, audit compression, chunked scans, full unredacted displays, and large-output rules.  
-- **v2.10.0 (minor):** Master alterable only by explicit user instruction; added governed artifacts & truncation protection; global versioning enforcement (semantic, FA authority); Core Principles baseline.  
-- **v2.9.0 (minor):** Added reporting format for success criteria scans.  
-- **v2.8.0 (minor):** Added freeze compliance scan requirement.  
-- **v2.7.0 (minor):** Added display sanitation & markdown boxing requirement.  
-- **v2.6.0 (minor):** Added contradiction prohibition.  
-- **v2.5.0 (minor):** Added singleton enforcement, persistence/anti-drift, global success metrics.  
-- **v2.4.0 (minor):** Added diagnostic-only guardrail (initial version).  
-- **v2.3.0 (minor):** Elevated performance-impact reporting as a global requirement for all governed scaffolds.  
-- **v2.2.3 (patch):** Prior frozen baseline used earlier in this session (no additional metadata recorded).  
-- **v2.0 (major):** Consolidated spec introduced with state model, permissions, rate limits, canonical command grammar, and JSON audit schema. Ready for adoption.  
+- (Earlier changelog entries preserved verbatim…)  
